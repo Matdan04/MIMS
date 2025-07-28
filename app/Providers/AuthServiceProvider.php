@@ -48,6 +48,18 @@ class AuthServiceProvider extends ServiceProvider
             return $user->hasPermission('roles.view');
         });
 
+        Gate::define('roles.create', function ($user) {
+            return $user->hasPermission('roles.create');
+        });
+
+        Gate::define('roles.edit', function ($user) {
+            return $user->hasPermission('roles.edit');
+        });
+
+        Gate::define('roles.delete', function ($user) {
+            return $user->hasPermission('roles.delete');
+        });
+
         Gate::define('roles.manage', function ($user) {
             return $user->hasPermission('roles.manage');
         });

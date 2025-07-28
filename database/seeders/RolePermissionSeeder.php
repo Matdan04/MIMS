@@ -21,6 +21,9 @@ class RolePermissionSeeder extends Seeder
             
             // Role Management
             ['name' => 'roles.view', 'display_name' => 'View Roles', 'description' => 'Can view roles and permissions', 'module' => 'roles'],
+            ['name' => 'roles.create', 'display_name' => 'Create Roles', 'description' => 'Can create new roles', 'module' => 'roles'],
+            ['name' => 'roles.edit', 'display_name' => 'Edit Roles', 'description' => 'Can edit role information', 'module' => 'roles'],
+            ['name' => 'roles.delete', 'display_name' => 'Delete Roles', 'description' => 'Can delete roles', 'module' => 'roles'],
             ['name' => 'roles.manage', 'display_name' => 'Manage Roles', 'description' => 'Can create, edit, and delete roles', 'module' => 'roles'],
             
             // System Administration
@@ -41,7 +44,7 @@ class RolePermissionSeeder extends Seeder
                 'name' => 'super_admin',
                 'display_name' => 'Super Admin',
                 'description' => 'Full system access with all permissions',
-                'permissions' => ['system.admin', 'dashboard.view', 'users.view', 'users.create', 'users.edit', 'users.delete', 'users.activate', 'roles.view', 'roles.manage']
+                'permissions' => ['system.admin', 'dashboard.view', 'users.view', 'users.create', 'users.edit', 'users.delete', 'users.activate', 'roles.view', 'roles.create', 'roles.edit', 'roles.delete', 'roles.manage']
             ],
             [
                 'name' => 'school_admin',

@@ -14,10 +14,12 @@ export function NavMain({ items = [] }: { items: NavItem[] }) {
                 {items.map((item) => {
                     const hasChildren = item.children && item.children.length > 0;
                     const isActive = page.url.startsWith(item.href);
+                    const isChildActive = hasChildren && item.children?.some(child => page.url.startsWith(child.href));
+                    const shouldBeOpen = isActive || isChildActive;
                     
                     if (hasChildren) {
                         return (
-                            <Collapsible key={item.title} asChild defaultOpen={isActive}>
+                            <Collapsible key={item.title} asChild defaultOpen={shouldBeOpen}>
                                 <SidebarMenuItem>
                                     <CollapsibleTrigger asChild>
                                         <SidebarMenuButton tooltip={{ children: item.title }}>

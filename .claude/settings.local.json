@@ -1,7 +1,12 @@
 {
   "permissions": {
     "allow": [
-      "Bash(php artisan make:migration:*)"
+      "Bash(php artisan make:migration:*)",
+      "Bash(mkdir:*)",
+      "Bash(php artisan:*)",
+      "Bash(ls:*)",
+      "Bash(npm run types:*)",
+      "Bash(npm run lint)"
     ],
     "deny": []
   }

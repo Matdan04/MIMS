@@ -9,6 +9,7 @@ interface UserFormData {
     password_confirmation: string;
     role_id: string;
     is_active: boolean;
+    [key: string]: any;
 }
 
 interface UseUserFormProps {
@@ -32,20 +33,10 @@ export function useUserForm({ initialData, roles, isEditing = false }: UseUserFo
     const handleSubmit = (e: React.FormEvent, userId?: string) => {
         e.preventDefault();
         
-        // Transform role_id before submission
-        const submitData = { ...data };
-        if (submitData.role_id === 'none') {
-            submitData.role_id = '';
-        }
-
         if (isEditing && userId) {
-            put(`/admin/users/${userId}`, {
-                data: submitData,
-            });
+            put(`/admin/users/${userId}`);
         } else {
-            post('/admin/users', {
-                data: submitData,
-            });
+            post('/admin/users');
         }
     };
 
