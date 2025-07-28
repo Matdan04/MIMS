@@ -36,12 +36,32 @@ class UserController extends Controller
                 $query->where('is_active', $request->status === 'active');
             });
 
-        $users = $query->latest()->paginate(15)->withQueryString();
+        // Handle sorting
+        if ($request->sort_by && $request->sort_direction) {
+            $sortBy = $request->sort_by;
+            $sortDirection = $request->sort_direction;
+            
+            if ($sortBy === 'user') {
+                $query->orderBy('name', $sortDirection);
+            } elseif ($sortBy === 'role') {
+                $query->leftJoin('roles', 'users.role_id', '=', 'roles.id')
+                      ->orderBy('roles.display_name', $sortDirection)
+                      ->select('users.*');
+            } elseif ($sortBy === 'status') {
+                $query->orderBy('is_active', $sortDirection);
+            } else {
+                $query->orderBy($sortBy, $sortDirection);
+            }
+        } else {
+            $query->latest();
+        }
+
+        $users = $query->paginate(3)->withQueryString();
 
         return Inertia::render('Admin/Users/Index', [
             'users' => $users,
             'roles' => Role::where('is_active', true)->get(['id', 'name', 'display_name']),
-            'filters' => $request->only(['search', 'role', 'status']),
+            'filters' => $request->only(['search', 'role', 'status', 'sort_by', 'sort_direction']),
         ]);
     }
 

@@ -1,20 +1,9 @@
-import { useState } from 'react';
-import { Head, Link, useForm } from '@inertiajs/react';
-import { ArrowLeft, Save } from 'lucide-react';
+import { Head, Link } from '@inertiajs/react';
+import { ArrowLeft } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { 
-    Select, 
-    SelectContent, 
-    SelectItem, 
-    SelectTrigger, 
-    SelectValue 
-} from '@/components/ui/select';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox';
-import InputError from '@/components/input-error';
+import { UserForm } from '@/components/admin/users/user-form';
+import { useUserForm } from '@/hooks/use-user-form';
 import { type BreadcrumbItem, type Role, type PageProps } from '@/types';
 
 interface Props extends PageProps {
@@ -28,24 +17,13 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function CreateUser({ roles }: Props) {
-    const { data, setData, post, processing, errors } = useForm({
-        name: '',
-        email: '',
-        phone: '',
-        password: '',
-        password_confirmation: '',
-        role_id: 'none',
-        is_active: true as boolean,
-    });
-
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        // Transform role_id before submission
-        if (data.role_id === 'none') {
-            setData('role_id', '');
-        }
-        post('/admin/users');
-    };
+    const {
+        data,
+        updateField,
+        handleSubmit,
+        processing,
+        errors,
+    } = useUserForm({ roles });
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -64,133 +42,15 @@ export default function CreateUser({ roles }: Props) {
                 </div>
 
                 {/* Form */}
-                <div className="max-w-2xl">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>User Information</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <form onSubmit={handleSubmit} className="space-y-6">
-                                {/* Basic Information */}
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div className="space-y-2">
-                                        <Label htmlFor="name">Full Name *</Label>
-                                        <Input
-                                            id="name"
-                                            type="text"
-                                            value={data.name}
-                                            onChange={(e) => setData('name', e.target.value)}
-                                            placeholder="Enter full name"
-                                            required
-                                        />
-                                        <InputError message={errors.name} />
-                                    </div>
-
-                                    <div className="space-y-2">
-                                        <Label htmlFor="email">Email Address *</Label>
-                                        <Input
-                                            id="email"
-                                            type="email"
-                                            value={data.email}
-                                            onChange={(e) => setData('email', e.target.value)}
-                                            placeholder="Enter email address"
-                                            required
-                                        />
-                                        <InputError message={errors.email} />
-                                    </div>
-                                </div>
-
-                                <div className="space-y-2">
-                                    <Label htmlFor="phone">Phone Number</Label>
-                                    <Input
-                                        id="phone"
-                                        type="tel"
-                                        value={data.phone}
-                                        onChange={(e) => setData('phone', e.target.value)}
-                                        placeholder="Enter phone number"
-                                    />
-                                    <InputError message={errors.phone} />
-                                </div>
-
-                                {/* Password */}
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div className="space-y-2">
-                                        <Label htmlFor="password">Password *</Label>
-                                        <Input
-                                            id="password"
-                                            type="password"
-                                            value={data.password}
-                                            onChange={(e) => setData('password', e.target.value)}
-                                            placeholder="Enter password"
-                                            required
-                                        />
-                                        <InputError message={errors.password} />
-                                    </div>
-
-                                    <div className="space-y-2">
-                                        <Label htmlFor="password_confirmation">Confirm Password *</Label>
-                                        <Input
-                                            id="password_confirmation"
-                                            type="password"
-                                            value={data.password_confirmation}
-                                            onChange={(e) => setData('password_confirmation', e.target.value)}
-                                            placeholder="Confirm password"
-                                            required
-                                        />
-                                        <InputError message={errors.password_confirmation} />
-                                    </div>
-                                </div>
-
-                                {/* Role Selection */}
-                                <div className="space-y-2">
-                                    <Label htmlFor="role_id">Role *</Label>
-                                    <Select
-                                        value={data.role_id}
-                                        onValueChange={(value) => setData('role_id', value)}
-                                        required
-                                    >
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Select a role" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="none">Select a role</SelectItem>
-                                            {roles.map((role) => (
-                                                <SelectItem key={role.id} value={role.id.toString()}>
-                                                    {role.display_name}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                    <InputError message={errors.role_id} />
-                                </div>
-
-                                {/* Status */}
-                                <div className="flex items-center space-x-2">
-                                    <Checkbox
-                                        id="is_active"
-                                        checked={data.is_active}
-                                        onCheckedChange={(checked) => setData('is_active', !!checked)}
-                                    />
-                                    <Label htmlFor="is_active">Active user account</Label>
-                                    <InputError message={errors.is_active} />
-                                </div>
-
-                                {/* Submit Buttons */}
-                                <div className="flex items-center justify-end gap-3 pt-6 border-t">
-                                    <Link href="/admin/users">
-                                        <Button type="button" variant="outline">
-                                            Cancel
-                                        </Button>
-                                    </Link>
-                                    <Button type="submit" disabled={processing}>
-                                        <Save className="h-4 w-4 mr-2" />
-                                        {processing ? 'Creating...' : 'Create User'}
-                                    </Button>
-                                </div>
-                            </form>
-                        </CardContent>
-                    </Card>
-                </div>
+                <UserForm
+                    data={data}
+                    errors={errors}
+                    roles={roles}
+                    processing={processing}
+                    isEditing={false}
+                    onFieldChange={updateField}
+                    onSubmit={handleSubmit}
+                />
             </div>
         </AppLayout>
     );
