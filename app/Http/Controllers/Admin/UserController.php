@@ -33,7 +33,7 @@ class UserController extends Controller
                 });
             })
             ->when($request->status !== null, function ($query) use ($request) {
-                $query->where('is_active', $request->status === 'active');
+                $query->where('users.is_active', $request->status === 'active');
             });
 
         // Handle sorting
@@ -48,7 +48,7 @@ class UserController extends Controller
                       ->orderBy('roles.display_name', $sortDirection)
                       ->select('users.*');
             } elseif ($sortBy === 'status') {
-                $query->orderBy('is_active', $sortDirection);
+                $query->orderBy('users.is_active', $sortDirection);
             } else {
                 $query->orderBy($sortBy, $sortDirection);
             }

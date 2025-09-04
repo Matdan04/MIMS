@@ -19,9 +19,9 @@ export default function Welcome() {
 
                 <main className="w-full bg-slate-50 relative">
                     <div className="w-full max-w-7xl mx-auto px-6 lg:px-8 py-24">
-                        <BenefitsSection />
+                        {/* <BenefitsSection /> */}
                         <ProcessSection />
-                        <ImpactMetricsSection />
+                        {/* <ImpactMetricsSection /> */}
                         <FeaturesSection />
                     </div>
                 </main>
